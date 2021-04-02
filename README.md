@@ -11,7 +11,7 @@
  - `rect(a,b,c,d)`
  - `ellipse(a,b,c,d)`
 
-```processing
+```java
 rect(250, 200, 150, 100);
 ellipse(250,200,200,200);
 ```
@@ -23,7 +23,7 @@ ellipse(250,200,200,200);
  - `stroke(r,g,b)`
  - `fill(r,g,b)`
 
-```processing
+```java
 background(216,225,149);
 stroke(255,0,0);
 fill(0,0,255);
@@ -35,7 +35,7 @@ rect(250,200,100,75);
  - `void setup()` : 처음 실행될 때 한번 호출되는 초기화 함수
  - `void draw()` : 지속적으로 호출되는 함수
 
-```processing
+```java
 void setup(){
     size(1000,800);
 }
@@ -54,7 +54,7 @@ void draw(){
 
 여기서 움직이는 애니메이션 만들기
 
-```processing
+```java
 void setup() {
   size(500,400);
 }
@@ -70,7 +70,7 @@ void draw() {
 
 setup 메소드와 draw 메소드를 이해하는 예제
 
-```processing
+```java
 void setup() {
   size(500,400);
   background(0);
@@ -87,7 +87,7 @@ void draw() {
 
 Conditional Statement와 같은 제어문법들을 사용해 더욱 Interactive한 프로그래밍을 해보자
 
-```processing
+```java
 void setup() {
   size(500,400);
   background(0);
