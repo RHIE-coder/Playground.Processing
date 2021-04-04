@@ -75,10 +75,63 @@ void setup(){
 
 ## - Shape
 
+### * 기본적인 사용법
+
+```java
+PShape square;  // The PShape object
+PShape imageShape; // The PShape object
+
+void setup() {  
+  size(800, 800);
+  // Creating the PShape as a square. The corner 
+  // is 0,0 so that the center is at 40,40 
+  square = createShape(RECT, 0, 0, 80, 80);
+  
+  // The file "astronaut.svg" must be in the data folder
+  // of the current sketch to load successfully
+  // can't be .png ...
+  imageShape = loadShape("astronaut.svg");
+}
+
+void draw() {
+  shape(square, 10, 10);
+  shape(imageShape, 100, 100, 200, 200);
+  shapeMode(CENTER);
+  shape(imageShape, 100, 100, 200, 200);
+}
+
+/*
+  PShape
+  
+  createShape
+  loadShape
+  shapeMode : CORNER, CORNERS, CENTER
+    
+  shape(shape)
+  shape(shape, x, y)
+  shape(shape, a, b, c, d)
+  
+    shape  PShape: the shape to display
+    x  float: x-coordinate of the shape
+    y  float: y-coordinate of the shape
+    a  float: x-coordinate of the shape
+    b  float: y-coordinate of the shape
+    c  float: width to display the shape
+    d  float: height to display the shape
+
+*/
+```
+
 ### * 2D Primitives
 	
 
 ellipse(a, b, c, d)
+```java
+size(500,500);
+ellipse(50, 50, 55, 55);
+ellipse(150, 150, 100, 70);
+```
+
 
 rect()
 
@@ -94,70 +147,3 @@ strokeWeight(10);  // Beastly
 line(20, 70, 80, 70);
 ```
 
-<br><br><br>
-
-### * Loading & Displaying
-
-<br><br><br>
-
-### * Attributes
-
-<br><br><br>
-
-### * Vertex
-
-<br><br><br><br><br>
-<br><br><br><br><br>
-
-## - Images
-
-### * 기본
-
-<br><br><br>
-
-### * Loading & Displaying
-
-<br><br><br>
-
-### * Pixcels
-
-<br><br><br><br><br>
-<br><br><br><br><br>
-
-## - Color
-
-### * Setting
-
-<br><br><br>
-
-### * Creating & Reading
-
-<br><br><br><br><br>
-<br><br><br><br><br>
-
-## - Transform
-
-<br><br><br><br><br>
-<br><br><br><br><br>
-
-## - Typography
-
-### * Loading & Displaying
-
-### * Attributes
-
-### * Metrics
-
-<br><br><br><br><br>
-<br><br><br><br><br>
-
-## - Random
-
-<br><br><br><br><br>
-<br><br><br><br><br>
-
-## - Input Interact
-
-### * Mouse
-
-### * Keyboard
