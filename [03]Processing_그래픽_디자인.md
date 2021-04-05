@@ -125,11 +125,15 @@ void draw() {
 ### * 2D Primitives
 	
 
-ellipse(a, b, c, d)
+#### ellipse(a, b, c, d)
 ```java
 size(500,500);
 ellipse(50, 50, 55, 55);
 ellipse(150, 150, 100, 70);
+```
+ - ellipseMode()
+```java
+
 ```
 
 
