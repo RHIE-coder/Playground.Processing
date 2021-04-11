@@ -298,14 +298,408 @@ void keyPressed(){
 }
 ```
 
+
+
+<hr><hr>여기까지 했었음<hr><hr>
+
+ - Example
+
+```java
+void setup(){
+    size(640, 360);
+    background(50);
+}
+
+void draw(){
+    stroke(255);
+    line(pmouseX, pmouseY,mouseX, mouseY);
+}
+
+void mousePressed(){
+    background(50);
+}
+
+void keyPressed(){
+    background(0,255,0);
+}
+```
+
 <br><br><br><br><br>
 <br><br><br><br><br>
 
 # 03. 변수, 상수 그리고 자료형
 
-### * 변수
-#### 변수 선언과 초기화
+## - 변수
+### * 변수 선언과 초기화
+
+1. Declare the variable
+
+2. Initialize variable
+
+3. use the variable
+
 ```java
 int a = 10;
 [자료형] [변수의 이름]  = [값]
 ```
+
+```java
+int circleX;
+
+void setup(){
+  size(640, 360);
+  circleX = 50;
+}
+
+void draw(){
+  background(50);
+  
+  fill(255);
+  ellipse(circleX, 180, 24, 24);
+  
+  circleX += 1;
+}
+```
+
+### * 변수 이름 명명법
+### * 변수 할당 원리
+
+<br><br><br>
+
+## - 자료형
+### * boolean : true, false
+### * byte
+### * char
+### * color
+### * double
+### * float
+### * int
+### * long
+
+<br><br><br>
+
+## - 상수
+### * final
+
+<br><br><br><br><br>
+<br><br><br><br><br>
+
+# 03. 연산자
+
+## - 산술 연산 +     -     *     %     /
+
+<br><br><br>
+
+## - 복합 할당 연산 +=     -=     *=     %=     /=
+
+<br><br><br>
+
+## - 증감 연산 ++     --
+
+<br><br><br>
+
+## - 관계 연산 ==     !=     <     <=     >     >=
+
+<br><br><br>
+
+## - 논리 연산 &&     ||     !
+
+<br><br><br>
+
+
+# 04. 제어문
+## - if
+
+```java
+void setup(){
+    size(640, 360);
+}
+
+void draw(){
+
+    background(50);
+
+    if(mouseX > 200){
+        background(255,100,0); //RGB
+    }
+}
+```
+<br><br><br>
+
+## - else if
+
+<br><br><br>
+
+## - else
+
+<br><br><br>
+
+## - switch~case~default
+
+<br><br><br>
+
+## - 삼항 조건 ?:
+
+<br><br><br>
+
+
+## - 조건문 Example
+
+ - case 1 
+
+```java
+void setup(){
+    size(640, 360);
+}
+
+void draw(){
+    background(0);
+
+    if(mouseX > 500){
+        fill(255,0,0);
+        rect(300,100,50,50);
+    }else if(mouseX > 400){
+        fill(0,255,255);
+        rect(300,200,50,50);
+    }else if(mouseX > 300){
+        fill(255,255,0);
+        rect(100,300,50,50);
+    }else if(mouseX > 200){
+        fill(0,255,0);
+        rect(300,200,60,50);
+    }
+
+
+    stroke(255);
+    line(100, 0, 100, height);
+    line(200, 0, 200, height);
+    line(300, 0, 300, height);
+    line(400, 0, 400, height);
+    line(500, 0, 500, height);
+}
+```
+
+ - case 2
+
+```java
+void setup(){
+    size(640, 360);
+}
+
+void draw(){
+    background(0);
+
+    if(mouseX > 500){
+        background(255,0,0);
+    }else if(mouseX > 400){
+        background(0,255,0);
+    }else if(mouseX > 300){
+        background(255,255,255);
+    }else if(mouseX > 200){
+        background(255,0,255);
+    }else{
+        background(255,255,0);
+    }
+
+
+    stroke(255);
+    line(100, 0, 100, height);
+    line(200, 0, 200, height);
+    line(300, 0, 300, height);
+    line(400, 0, 400, height);
+    line(500, 0, 500, height);
+}
+```
+
+### * Logical Operator
+
+`&&`, `||`, `!`
+
+ - case 1
+
+```java
+float x = 100;
+boolean going = false;
+
+void setup(){
+    size(400,300);
+}
+
+void draw(){
+    background(0);
+    fill(255);
+
+    ellipse(x, 150, 24, 24);
+
+    if(going){
+        x = x + 2;
+    }
+}
+
+void mousePressed(){
+    if(going){
+      going = false;
+    }else{
+      going = true;
+    }
+}
+```
+
+ - case 2
+
+`void mousePressed()`의 Statement를 아래와 같이 변경
+
+```java
+void mousePressed(){
+  going = !going;
+}
+```
+
+### * The Bouncing Ball
+
+ - step 1
+
+```java
+float circleX;
+float xspeed = 2;
+
+void setup(){
+
+    size(640, 360);
+    circleX = 0;
+}
+
+void draw(){
+    background(51);
+    fill(102);
+    stroke(255);
+    ellipse(circleX, height/2, 32, 32);
+    circleX += xspeed;
+}
+```
+
+ - step 2
+
+```java
+float circleX;
+float speedRule = 10;
+float xspeed = speedRule;
+
+void setup(){
+
+    size(640, 360);
+    circleX = 0;
+}
+
+void draw(){
+    background(51);
+    fill(102);
+    stroke(255);
+    ellipse(circleX, height/2, 32, 32);
+    circleX += xspeed;
+
+    if(circleX == width){
+        println("TRUN ARROUND!!");
+    }
+    if(circleX > width){
+        xspeed -= speedRule;
+    }
+    if(circleX < 0){
+        xspeed = speedRule;
+    }
+}
+```
+
+ - step 3
+
+```java
+float circleX;
+float speedRule = 10;
+float xspeed = speedRule;
+
+void setup(){
+
+    size(640, 360);
+    circleX = 0;
+}
+
+void draw(){
+    background(51);
+    fill(102);
+    stroke(255);
+    ellipse(circleX, height/2, 32, 32);
+    circleX += xspeed;
+
+    if(circleX > width || circleX < 0){
+        xspeed *= -1;
+        //make more and more faster
+        //xspeed *= -1.1;
+        
+        //make more and more slower
+        //xspeed *= 0.9;
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# random()
+
+random(100);
+
+random(50, 100);
+
+ - case 1
+
+```java
+float circleX;
+
+void setup(){
+  size(640, 360);
+  circleX = width/2;
+}
+
+void draw(){
+  background(50);
+  
+  fill(255);
+  ellipse(circleX, 180, 24, 24);
+  
+  circleX += random(-3, 3);
+}
+```
+
+ - case2
+
+ ```java
+float circleX;
+float circleY;
+
+void setup(){
+  size(640, 360);
+}
+
+void draw(){
+  
+  circleX = random(width);
+  circleY = random(height);
+  
+  //그리기
+  background(50);
+  fill(255);
+  ellipse(circleX, circleY, 24, 24);
+}
+ ```
+
