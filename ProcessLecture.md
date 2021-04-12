@@ -330,6 +330,7 @@ void keyPressed(){
 # 03. 변수, 상수 그리고 자료형
 
 ## - 변수
+
 ### * 변수 선언과 초기화
 
 1. Declare the variable
@@ -384,7 +385,7 @@ void draw(){
 <br><br><br><br><br>
 <br><br><br><br><br>
 
-# 03. 연산자
+# 05. 연산자
 
 ## - 산술 연산 +     -     *     %     /
 
@@ -407,7 +408,7 @@ void draw(){
 <br><br><br>
 
 
-# 04. 제어문
+# 06. 제어문
 ## - if
 
 ```java
@@ -551,7 +552,7 @@ void mousePressed(){
 
 ```java
 void mousePressed(){
-  going = !going;
+  going =! going;
 }
 ```
 
@@ -641,7 +642,11 @@ void draw(){
 }
 ```
 
-
+# 06. 반복문
+### * for
+### * while
+### * continue & break
+### * 
 
 
 
