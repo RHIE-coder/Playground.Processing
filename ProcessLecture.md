@@ -385,7 +385,7 @@ void draw(){
 <br><br><br><br><br>
 <br><br><br><br><br>
 
-# 05. 연산자
+# 04. 연산자
 
 ## - 산술 연산 +     -     *     %     /
 
@@ -405,10 +405,11 @@ void draw(){
 
 ## - 논리 연산 &&     ||     !
 
-<br><br><br>
+<br><br><br><br><br>
+<br><br><br><br><br>
 
 
-# 06. 제어문
+# 05. 제어문
 ## - if
 
 ```java
@@ -643,24 +644,8 @@ void draw(){
 ```
 
 # 06. 반복문
-### * for
-### * while
-### * continue & break
-### * 
 
-
-
-
-
-
-
-
-
-
-
-
-
-# random()
+## - random()
 
 random(100);
 
@@ -706,5 +691,572 @@ void draw(){
   fill(255);
   ellipse(circleX, circleY, 24, 24);
 }
- ```
+```
+
+## - for
+
+<br><br><br>
+
+## - while
+
+<br><br><br>
+
+## - continue & break
+
+<br><br><br>
+
+## - 반복문 Example
+
+### * while loop
+
+ - case 1
+
+```java
+float x = 0;
+
+void setup(){
+    size(400,300);
+}
+
+void draw(){
+    background(0);
+    
+    x = 0;
+    
+    while(x < width){
+        x += 20;
+        fill(101);
+        stroke(255);
+        ellipse(x,150,16,16);
+    }
+}
+```
+
+ - case 2
+
+```java
+float x = 0;
+
+void setup(){
+    size(400, 300);
+}
+
+void draw(){
+
+    background(0);
+
+    x = 0;
+    while(x < width){
+        if(mouseX < 1){
+            x += 1;
+        }else{
+            x += mouseX;
+        }
+        fill(101);
+        stroke(255);
+        ellipse(x,150,16,16);
+    }
+}
+```
+
+### * Two Loops
+
+ - step 1
+
+```java
+float x = 0;
+float y = 0;
+
+void setup(){
+    size(400, 300);
+}
+
+void draw(){
+    background(0);
+
+    stroke(255);
+    strokeWeight(2);
+
+    x = 50;
+    while ( x  < width ){
+        line(x, 0, x, height);
+        x += 50;
+    }
+    
+    y = 50;
+    while ( y  < height ){
+        line(0, y, width, y);
+        y += 50;
+    }
+}
+```
+ - step 2
+
+```java
+float x = 0;
+float y = 0;
+float spacing = 50;
+
+void setup(){
+    size(400, 300);
+}
+
+void draw(){
+    background(0);
+
+    spacing += random(-2,2);
+
+    stroke(255);
+    strokeWeight(2);
+
+    x = 0;
+    while ( x  < width ){
+        line(x, 0, x, height);
+        x += spacing;
+    }
+    
+    y = 0;
+    while ( y  < height ){
+        line(0, y, width, y);
+        y += spacing;
+    }
+}
+```
+
+### * for loop
+
+```java
+float x = 0;
+float y = 0;
+float spacing = 20;
+
+void setup(){
+    size(400, 300);
+}
+
+void draw(){
+    background(0);
+
+    stroke(255);
+    strokeWeight(2);
+
+    x = 0;
+    while ( x  < width ){
+        line(x, 0, x, height);
+        x += spacing;
+    }
+    
+    for(int y = 0; y < height; y += 20){
+        line(0, y, width, y);
+    }
+}
+```
+
+### * careful about globalVar and localVar
+
+```java
+int num = 10; //global
+
+void setup(){
+    float xcircle = 50; //local
+}
+
+void draw(){
+    println(num); //10
+    println(xcircle); //cannot found
+}
+```
+
+### * loop vs draw
+
+```java
+float endX = 0;
+
+void setup(){
+    size(400,300);
+}
+
+void draw(){
+    background(0);
+    strokeWeight(2);
+    stroke(255);
+
+    int x = 0;
+    while( x < endX){
+        line(x, 0, x, height);
+        x += 20;
+    }
+
+    endX += 1;
+}
+```
+
+### * nested loop
+
+#### why need nested loop
+
+```java
+size(400, 300);
+background(0);
+strokeWeight(2);
+stroke(255);
+fill(127);
+
+for(int x = 0; x < width; x += 20){
+    rect(x, 0, 20 ,20);
+}
+
+for(int y = 0; y < height; y+=20){
+    rect(0,y, 20, 20);
+}
+```
+
+#### let's get the right thing
+
+```java
+size(400, 300);
+background(0);
+strokeWeight(2);
+stroke(255);
+fill(127);
+
+for(int x = 0; x < width; x += 20){
+    for(int y = 0; y < height; y+=20){
+        rect(x,y, 20, 20);
+    }
+}
+```
+
+#### fun~!
+
+```java
+size(400, 300);
+background(0);
+strokeWeight(2);
+stroke(255);
+fill(127);
+
+for(int x = 0; x < width; x += 20){
+    for(int y = 0; y < height; y+=20){
+        fill(random(255));
+        rect(x,y, 20, 20);
+    }
+}
+```
+
+
+<br><br><br><br><br>
+<br><br><br><br><br>
+
+# 07. 함수
+
+## - 함수란?
+
+```java
+void setup(){
+  size(320,240);
+}
+
+void draw(){
+   background(0);
+   flower();
+}
+
+void flower(){
+   fill(255,0,0);
+   ellipse(100,100,20,20);
+}
+```
+
+<br><br><br>
+
+## - 함수 선언 및 호출과 매개변수(parameter)
+
+<br><br><br>
+
+## - return과 반환형(void)
+
+<br><br><br>
+
+## - 함수 형태 종류
+
+<br><br><br>
+
+## - 함수 Example
+
+### * Modulization as Functions 1
+
+#### Origin
+
+```java
+float x = 0;
+float y = 0;
+float xspeed = 5;
+float yspeed = 2.3;
+
+void setup(){
+    size(320, 240);
+}
+
+void draw(){
+    background(255);
+    stroke(0);
+    fill(127);
+    ellipse(x, y, 32, 32);
+
+    x += xspeed;
+    y+= yspeed;
+
+    if( x > width || x < 0){
+        xspeed *= -1;
+    }
+    if( y > height || y < 0){
+        yspeed *= -1;
+    }
+}
+```
+
+ - step 1
+
+```java
+float x = 0;
+float y = 0;
+float xspeed = 5;
+float yspeed = 2.3;
+
+void setup(){
+    size(320, 240);
+}
+
+void draw(){
+    background(255);
+    stroke(0);
+    fill(127);
+    ellipse(x, y, 32, 32);
+
+    x += xspeed;
+    y+= yspeed;
+
+    if( x > width || x < 0){
+        xspeed *= -1;
+    }
+    if( y > height || y < 0){
+        yspeed *= -1;
+    }
+}
+
+void displayBall(){
+
+}
+
+void moveBall(){
+
+}
+
+void checkEdges(){
+
+}
+```
+
+ - step 2
+
+```java
+float x = 0;
+float y = 0;
+float xspeed = 5;
+float yspeed = 2.3;
+
+void setup(){
+    size(320, 240);
+}
+
+void draw(){
+    background(255);
+
+
+}
+
+void displayBall(){
+    stroke(0);
+    fill(127);
+    ellipse(x, y, 32, 32);
+}
+
+void moveBall(){
+    x += xspeed;
+    y+= yspeed;
+}
+
+void checkEdges(){
+    if( x > width || x < 0){
+        xspeed *= -1;
+    }
+    if( y > height || y < 0){
+        yspeed *= -1;
+    }
+}
+```
+
+ - step 3
+
+```java
+float x = 0;
+float y = 0;
+float xspeed = 5;
+float yspeed = 2.3;
+
+void setup(){
+    size(320, 240);
+}
+
+void draw(){
+    background(255);
+    displayBall();
+    moveBall();
+    checkEdges();
+
+}
+
+void displayBall(){
+    stroke(0);
+    fill(127);
+    ellipse(x, y, 32, 32);
+}
+
+void moveBall(){
+    x += xspeed;
+    y+= yspeed;
+}
+
+void checkEdges(){
+    if( x > width || x < 0){
+        xspeed *= -1;
+    }
+    if( y > height || y < 0){
+        yspeed *= -1;
+    }
+}
+```
+
+만일 여기서 x값을 1000000으로 두거나 필수적으로 호출되어야 할 함수 몇개가 빠지게 된다면 정상적을 동작하기가 힘들 것이다.
+
+### * Modulization as Functions 2
+
+ - step 1
+```java
+void setup(){
+   size(640, 360); 
+}
+
+void draw(){
+    background(51);
+    fill(127);
+    stroke(255);
+    strokeWeight(2);
+
+    beginShape();
+    vertex(100,50);
+    vertex(114,80);
+    vertex(147,85);
+    vertex(123,107);
+    vertex(129, 140);
+    vertex(100, 125);
+    vertex(71, 140);
+    vertex(77, 107);
+    vertex(53,85);
+    vertex(86,80);
+    endShape(CLOSE);
+}
+```
+
+ - step 2
+```java
+void setup(){
+   size(640, 360); 
+}
+
+void draw(){
+    background(51);
+    star();
+}
+
+void star(){
+    
+    fill(127);
+    stroke(255);
+    strokeWeight(2);
+
+    beginShape();
+    vertex(100,50);
+    vertex(114,80);
+    vertex(147,85);
+    vertex(123,107);
+    vertex(129, 140);
+    vertex(100, 125);
+    vertex(71, 140);
+    vertex(77, 107);
+    vertex(53,85);
+    vertex(86,80);
+    endShape(CLOSE);
+}
+```
+
+ - step 3
+
+```java
+void setup(){
+   size(640, 360); 
+}
+
+void draw(){
+    background(51);
+    star(100,100);
+    star(200,300);
+}
+
+void star(float x, float y){
+    
+    fill(127);
+    stroke(255);
+    strokeWeight(2);
+
+    beginShape();
+    vertex(x,y-50);
+    vertex(x+14,y-20);
+    vertex(x+47,y-15);
+    vertex(x+23,y+7);
+    vertex(x+29,y+40);
+    vertex(x,y+25);
+    vertex(x-29,y+40);
+    vertex(x-23,y+7);
+    vertex(x-47,y-15);
+    vertex(x-14,y-20);
+    endShape(CLOSE);
+}
+```
+
+
+<br><br><br><br><br>
+<br><br><br><br><br>
+
+# 08.  배열과 클래스
+## - 배열 선언과 개념
+
+## - 클래스 선언과 개념
+
+<br><br><br><br><br>
+<br><br><br><br><br>
+
+# 이제 여기서부터 이미지 픽셀 등 도구 다루기
+
+
+
+
+
+
+
+
+
+
+
 
