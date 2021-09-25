@@ -298,10 +298,6 @@ void keyPressed(){
 }
 ```
 
-
-
-<hr><hr>여기까지 했었음<hr><hr>
-
  - Example
 
 ```java
