@@ -26,15 +26,13 @@ let currentState = LOADING;
 let display;
 
 function setup() {
-    createCanvas(800, 400);
-    display = new Display();
+    createCanvas(windowWidth, windowHeight);
+    display = new Program();
+    textSize(20);
 }
 
 function draw() {
-    background(255);
-    display.default();
-    display.initMousePointer();
-
+    background('grey');
     switch (currentState) {
         case LOADING:
             display.loading();
@@ -52,7 +50,7 @@ function draw() {
     }
 }
 
-class Display {
+class Program {
 
     constructor() {
         this.dx = 10;
@@ -63,12 +61,14 @@ class Display {
     loading() {
         fill('pink');
         ellipse(200, 200, 100, 100);
+        fill('white');
         text('Loading...', 300, 200);
     }
 
     mainMenu() {
         fill('lightgreen');
         rect(150, 150, 100, 100);
+        fill('white');
         text('Main Menu. Click to play.', 300, 200);
     }
 
@@ -77,47 +77,14 @@ class Display {
         this.x = this.x + this.dx;
         fill('red');
         ellipse(this.x, 200, 100, 100);
-        if (this.x >= width) {
+        if (this.x >= windowWidth) {
+            fill('white');
             text('Game over! Click to go back to main menu', 200, 200);
         }
     }
 
-    resetGame() { //remove
+    resetGame() {
         this.x = 20;
-    }
-
-    default(){
-        const WALL_THICKNESS = 10;
-        
-        const borderTop = createSprite(width / 2, 0, width, WALL_THICKNESS * 2)
-        const borderBottom = createSprite(width / 2, height, width, WALL_THICKNESS * 2)
-        const borderLeft = createSprite(0, height / 2, WALL_THICKNESS * 2, height)
-        const borderRight = createSprite(width, height / 2, WALL_THICKNESS * 2, height)
-
-        const borders = [borderTop, borderBottom, borderLeft, borderRight]
-
-        const wall = new Group()
-
-        for (let i = 0; i < 4; i++) {
-            borders[i].shapeColor = color(150, 150, 150);
-            borders[i].immovable = true;
-            wall.add(borders[i])
-        }
-
-        drawSprites(wall)
-        noStroke();
-    }
-
-    initMousePointer(){
-        if (mouseIsPressed) {
-            if (mouseButton === LEFT) {
-                fill(color('red'));
-                ellipse(mouseX, mouseY, 15, 15);
-            }
-        } else {
-            fill(color('black'));
-            ellipse(mouseX, mouseY, 5, 5);
-        }
     }
 
 }
