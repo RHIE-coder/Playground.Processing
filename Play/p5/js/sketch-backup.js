@@ -165,52 +165,16 @@ let currentState;
 // function preload() {
 //     main_menu_title_img = loadImage('assets/title.png');
 // }
-
+let test
 function setup() {
-    LOADING = 0; 
-    MAIN_MENU = 1; 
-    PLAY = 2; 
-    HIGH_SCORE = 3; 
-    SETTINGS = 4;
-    createCanvas(800, 400);
-    currentState = LOADING;
-    // program = new Program()
-    // image(main_menu_title_img, 10, 10, 780, 300);
+    createCanvas(400,400)
+    test = createSprite(200,200,50,50);
+    test.addAnimation('process', 'assets/timer/process0001.png', 'assets/timer/process0021.png')
+    
 }
 
 
 function draw() {
-    switch(currentState){
-        case LOADING:
-            drawLoadingScreen();
-            break;
-        case MAIN_MENU:
-            drawMainMenuScreen();
-            break;
-    }
+    background(240,255,240)
+    drawSprites()
 }
-
-function drawLoadingScreen(){
-    fill('pink');
-    ellipse(200,200,100,100);
-    fill('black');
-    text('Loading...',200,200);
-}
-
-function drawMainMenuScreen(){
-    fill('lightgreen');
-    rect(150,150,100,100);
-    text('Main Menu', 200, 100);
-}
-
-function mouseClicked() {
-    console.log('dfdfd')
-    if (currentState == LOADING) {  
-        currentState = MAIN_MENU;  
-    }else if (currentState == MAIN_MENU) {
-        currentState = PLAY;  
-    }else if (currentState == PLAY) {
-        currentState = LOADING;
-    }
-}
-
