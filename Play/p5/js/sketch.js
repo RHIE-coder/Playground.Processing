@@ -39,6 +39,9 @@ let effectWaiting = [];
 let explosionSheet;
 let explosionImages = []
 
+let playerGroup;
+let enemyGroup;
+
 function preload() {
     titleImg = loadImage('assets/title.png');
     welcomeVid = createVideo('assets/simulation.mp4')
@@ -134,13 +137,15 @@ class Display {
         this.gameStatus={
             score : 0,
             stage : 0,
-            isLeftBuildingAlive : false,
-            isRightBuildingAlive : false,
-            isMissileCenterAlive : false,
-            restOfMissile: 0,
+            alivedbuilding : [0, 0, 0, 0, 0, 0],
+            alivedAntiMissile : [0, 0, 0],
+            restOfMissile: [0, 0, 0],
             isFail: false,
             isPass: false,
         }
+
+        playerGroup = new Group()
+        enemyGroup = new Group()
     }
 
     welcome() {
@@ -171,7 +176,7 @@ class Display {
 
     splash() {
         if (!isFinishSplash && frameCount % 20 == 0) {
-            effectWaiting.push(new Explosion(random(100, 700), random(50, 300), 2));
+            effectWaiting.push(new Splash(random(100, 700), random(50, 300), 2));
             splashCount -= 1
             if (splashCount == 0) {
                 isFinishSplash = true;
@@ -278,9 +283,39 @@ class Display {
 
 
     gamePlay() {
-        background(0);
+        playerGroup.overlap(enemyGroup, function(player,enemy){
+            console.log(player)
+            enemy.shapeColor = color('blue');
+            
+        })
+
+        if(frameCount % 180 == 0){
+            enemyGroup.add(this.enemyMissileShoot())
+        }
         
-        
+    }
+
+    playerMissileShoot(){
+        let stage = 1
+        let speed = 1
+        let alive = 1
+        let bombSize = 50
+        const missile = new Missile(mouseX, mouseY, width/2, height/2)
+        const playerThing = missile.player(stage, speed, alive, bombSize);
+        effectWaiting.push(missile)
+        return playerThing;
+    }
+
+    enemyMissileShoot(){
+        let stage = 1
+        const missile = new Missile(random(0, width), height - 20, random(0, width), 0)
+        const enemyThing = missile.enemy(stage);
+        effectWaiting.push(missile)
+        return enemyThing
+    }
+
+    mouseClickEvent(){
+        playerGroup.add(this.playerMissileShoot());
     }
 
     leaderBoard(){
@@ -321,6 +356,8 @@ class Display {
     default() {
         if (currentState == SPLASH) {
             background(111, 109, 81);
+        }else if(currentState == PLAY){
+            background(0);
         } else {
             background(255);
         }
@@ -328,31 +365,134 @@ class Display {
         drawSprites(this.wall);
         noStroke();
 
-        effectWaiting.forEach(explosion => {
-            explosion.draw();
-            explosion.update();
+        effectWaiting.forEach(effect => {
+            effect.draw();
+            effect.update();
         });
 
-        effectWaiting = effectWaiting.filter(explosion => !explosion.isOver());
+        effectWaiting = effectWaiting.filter(effect => !effect.isOver());
     }
 
     initMousePointer() {
         if (mouseIsPressed) {
-            if (mouseButton === LEFT) {
-                fill(color('red'));
-                ellipse(mouseX, mouseY, 15, 15);
-            }
+            fill(color('red'));
+            ellipse(mouseX, mouseY, 15, 15);
         } else {
             fill(color('black'));
             ellipse(mouseX, mouseY, 5, 5);
         }
     }
+}
+
+class Missile{
+    constructor(xTarget, yTarget, xFrom, yFrom) {
+        this.xTarget = xTarget
+        this.yTarget = yTarget
+        this.xFrom = xFrom
+        this.yFrom = yFrom
+        this.isEnemy = false;
+        this.isArrivedAtTarget = false;
+    }
+
+    player(stage, speed, alive, bombSize){
+        this.stage = stage
+        this.speed = speed;
+        this.alive = alive;
+        this.bombSize = bombSize;
+
+        this.missile = createSprite(this.xFrom, this.yFrom, 5, 5)
+        this.missile.shapeColor = color('white')
+        this.bomb = createSprite(this.xTarget, this.yTarget, this.bombSize, this.bombSize)
+        this.bomb.shapeColor = color('yellow')
+
+        return this.bomb;
+    }
 
 
+    enemy(stage){
+        this.isEnemy = true
+        this.stage = stage
+        this.missile = createSprite(this.xFrom, this.yFrom, 10, 10)
+        this.missile.shapeColor = color('red')
+
+        return this.missile;
+    }
+
+    draw() {
+        if(!this.isEnemy){
+            this.playerDraw()
+        }else{
+            this.enemyDraw();
+        }
+    }
+
+    playerDraw(){
+        if(!this.isArrivedAtTarget){
+            drawSprite(this.missile);
+            this.missile.setSpeed(this.speed)
+            this.missile.attractionPoint(1, this.xTarget, this.yTarget)
+            let that = this;
+            this.missile.overlap(this.bomb, function(){
+                that.isArrivedAtTarget = true
+            });
+        }else{
+            drawSprite(this.bomb)
+        }
+    }
+
+    enemyDraw(){
+        drawSprite(this.missile);
+        this.missile.setSpeed(this.stage)
+        this.missile.attractionPoint(1, this.xTarget, this.yTarget);
+    }
+
+    update() {
+        if(!this.isEnemy){
+            this.playerUpdate()
+        }else{
+
+        }
+    }
+
+    playerUpdate(){
+        if(this.isArrivedAtTarget){
+            this.alive -= (this.stage*0.01);
+        }
+    }
+
+    enemyUpdate(){
+
+    }
+
+    isOver() {
+        if(!this.isEnemy){
+            return this.playerOver();
+        }else{
+            return this.enemyOver();
+        }
+    }
+
+    playerOver(){
+        if(this.alive < 0){
+            playerGroup.remove(this.bomb)
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    enemyOver(){
+        if(this.missile.position.y >= 350){
+            enemyGroup.remove(this.missile)
+            return true;
+        }else{
+            return false;
+        }
+    }
 
 }
 
-class Explosion {
+class Splash {
     constructor(x, y, speed) {
         this.sprites = explosionImages;
         //console.log(x, y)
@@ -460,14 +600,18 @@ function draw() {
 */
 
 function mouseClicked() {
-    // /* test */ isWelcome = true
-    // /* test */ welcomeCount = -1
     if (isWelcome && welcomeCount < 0) {
         if (currentState == WELCOME) {
             currentState = SPLASH;
         } else if (currentState == LOADING && isFinishLoading) {
             currentState = MAIN_MENU;
         }
+    }
+}
+
+function mousePressed() {
+    if(currentState == PLAY){
+        display.mouseClickEvent();
     }
 }
 
@@ -479,6 +623,14 @@ function keyPressed() {
             display.changeMenuPointing(DOWN_ARROW)
         } else if (keyCode == ENTER) {
             display.menuSelect()
+        }
+    }else if(currentState == PLAY){
+        if (keyCode == 90) { //z
+            console.log("z")
+        }else if(keyCode == 88){ //x
+            console.log('x')
+        }else if(keyCode == 67){ //c
+            console.log('c')
         }
     }
 }
