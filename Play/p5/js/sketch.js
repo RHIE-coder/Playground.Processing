@@ -17,21 +17,23 @@
 */
 
 const WELCOME = 0;
-const LOADING = 1;
-const MAIN_MENU = 2;
-const PLAY = 3;
-const HIGH_SCORE = 4;
-const SETTINGS = 5;
+const SPLASH = 1;
+const LOADING = 2;
+const MAIN_MENU = 3;
+const PLAY = 4;
+const HIGH_SCORE = 5;
+const RESET = 6;
 
-let currentState = WELCOME;
-// let currentState = MAIN_MENU;
+// let currentState = WELCOME;
+let currentState = PLAY;
 let display;
 let welcomeVid;
 let isWelcome;
 let welcomeCount = 3;
 let titleImg;
+let splashCount = 10;
+let isFinishSplash;
 let isFinishLoading;
-let loadingCount = 3;
 
 let effectWaiting = [];
 let explosionSheet;
@@ -54,11 +56,14 @@ function setup() {
 }
 
 function draw() {
+    // console.log(frameCount)
     display.default();
-
     switch (currentState) {
         case WELCOME:
             display.welcome();
+            break;
+        case SPLASH:
+            display.splash();
             break;
         case LOADING:
             display.loading();
@@ -68,6 +73,12 @@ function draw() {
             break;
         case PLAY:
             display.gamePlay();
+            break;
+        case HIGH_SCORE:
+            display.leaderBoard();
+            break;
+        case RESET:
+            display.reset();
             break;
     }
 
@@ -93,16 +104,17 @@ class Display {
             this.wall.add(borders[i])
         }
 
-        this.btn = []
+        this.menuBtn = []
         this.menu = new Group()
         let distance = 110;
         for (let i = 0; i < 3; i++) {
-            this.btn.push(createSprite(width / 2, height / 2 + distance, 180, 70));
-            // this.btn[i].setSpeed(4, random(-150, 150));
-            this.btn[i].shapeColor = color(192, 192, 192);
-            this.menu.add(this.btn[i]);
+            this.menuBtn.push(createSprite(width / 2, height / 2 - distance, 180, 70));
+            this.menuBtn[i].shapeColor = color(192, 192, 192);
+            this.menu.add(this.menuBtn[i]);
             distance -= 110;
         }
+        this.menuIndex = 0;
+        this.isMenuSelected = false;
 
         explosionSheet.loadPixels();
 
@@ -118,6 +130,17 @@ class Display {
         explosionImages.push(explosionSheet.get(277, 93, 89, 89));
         explosionImages.push(explosionSheet.get(369, 93, 89, 89));
 
+
+        this.gameStatus={
+            score : 0,
+            stage : 0,
+            isLeftBuildingAlive : false,
+            isRightBuildingAlive : false,
+            isMissileCenterAlive : false,
+            restOfMissile: 0,
+            isFail: false,
+            isPass: false,
+        }
     }
 
     welcome() {
@@ -129,7 +152,7 @@ class Display {
             fill('white')
             text('SeongYeon Yoo', width / 2, height / 2)
             if (frameCount == 500) {
-                currentState = LOADING
+                currentState = SPLASH
             }
         }
 
@@ -146,9 +169,27 @@ class Display {
         text(showText, width / 2, 350)
     }
 
+    splash() {
+        if (!isFinishSplash && frameCount % 20 == 0) {
+            effectWaiting.push(new Explosion(random(100, 700), random(50, 300), 2));
+            splashCount -= 1
+            if (splashCount == 0) {
+                isFinishSplash = true;
+                frameCount = 0;
+            }
+            return
+        }
+        //delay
+        if (isFinishSplash) {
+            if (frameCount % 60 == 0) {
+                currentState = LOADING
+            }
+        }
+    }
+
     loading() {
         if (this.loadingBarSize > width) {
-            image(titleImg, this.WallThickness, this.WallThickness, 750, 300)
+            image(titleImg, this.WallThickness, this.WallThickness, width-(this.WallThickness*2), 300)
             textAlign(CENTER, CENTER)
             textSize(40);
             fill('black')
@@ -163,22 +204,127 @@ class Display {
     }
 
     mainMenu() {
-        this.menu.bounce(this.menu)
-        this.menu.bounce(this.wall)
         drawSprites(this.menu)
+        fill('black');
+
+        const menuText = ["START", "BOARD", "RESET"]
+
+        for (let i = 0; i < this.menuBtn.length; i++) {
+            textSize(16);
+            textStyle(BOLD);
+            textAlign(CENTER);
+            text(menuText[i], this.menuBtn[i].position.x, this.menuBtn[i].position.y);
+        }
+
+
+        if(!this.isMenuSelected){
+            const xPosition = this.menuBtn[this.menuIndex].position.x - 150
+            const yPosition = this.menuBtn[this.menuIndex].position.y
+    
+            ellipse(xPosition, yPosition, 30, 30);
+            frameCount = 0;
+        }else{
+            this.menu.bounce(this.wall)
+            this.menu.bounce(this.menu)
+
+            if(frameCount % 180 == 0){
+                currentState = this.selectd
+            }
+
+        }
+        
     }
 
-    gamePlay() {
-        this.x = this.x + this.dx;
-        fill('red');
-        ellipse(this.x, 200, 100, 100);
-        if (this.x >= width) {
-            text('Game over! Click to go back to main menu', 200, 200);
+    changeMenuPointing(toWhere) {
+        if (toWhere == UP_ARROW) {
+            this.menuIndex -= 1
+        } else if (toWhere == DOWN_ARROW) {
+            this.menuIndex += 1
+        }
+
+        if (this.menuIndex < 0) {
+            this.menuIndex = 2
+        } else if (this.menuIndex > 2) {
+            this.menuIndex = 0
         }
     }
 
+    menuSelect() {
+        // this.menuBtn[i].setSpeed(4, random(-150, 150));
+        // this.menu.bounce(this.menu)
+        // this.menu.bounce(this.wall)
+        let speed = 20
+        this.isMenuSelected = true
+        if (this.menuIndex == 0) {
+            this.menuBtn[0].immovable = true;
+            this.menuBtn[0].shapeColor = color(255);
+            this.menuBtn[1].setSpeed(speed, 0);
+            this.menuBtn[2].setSpeed(speed, 0);
+            this.selectd = PLAY
+        } else if (this.menuIndex == 1) {
+            this.menuBtn[0].setSpeed(speed, 0);
+            this.menuBtn[1].immovable = true;
+            this.menuBtn[1].shapeColor = color(255);
+            this.menuBtn[2].setSpeed(speed, 0);
+            this.selectd = HIGH_SCORE
+        } else if (this.menuIndex == 2) {
+            this.menuBtn[0].setSpeed(speed, 0);
+            this.menuBtn[1].setSpeed(speed, 0);
+            this.menuBtn[2].immovable = true;
+            this.menuBtn[2].shapeColor = color(255);
+            this.selectd = RESET
+        }
+    }
+
+
+    gamePlay() {
+        background(0);
+        
+        
+    }
+
+    leaderBoard(){
+        background('blue');
+    }
+
+    reset(){
+        isWelcome = false;
+        welcomeCount = 3
+        isFinishSplash = false;
+        splashCount = 10
+        isFinishLoading = false;
+        this.loadingBarSize = 0;
+
+        this.menuBtn = []
+        this.menu = new Group()
+        let distance = 110;
+        for (let i = 0; i < 3; i++) {
+            this.menuBtn.push(createSprite(width / 2, height / 2 - distance, 180, 70));
+            this.menuBtn[i].shapeColor = color(192, 192, 192);
+            this.menu.add(this.menuBtn[i]);
+            distance -= 110;
+        }
+        this.menuIndex = 0;
+        this.isMenuSelected = false;
+
+        welcomeVid = createVideo('assets/simulation.mp4')
+        welcomeVid.addCue(2, function () {
+            isWelcome = true
+        })
+        welcomeVid.hide()
+        welcomeVid.loop()
+
+        currentState = WELCOME;
+        frameCount = 0;
+    }
+
     default() {
-        background(255);
+        if (currentState == SPLASH) {
+            background(111, 109, 81);
+        } else {
+            background(255);
+        }
+
         drawSprites(this.wall);
         noStroke();
 
@@ -186,8 +332,8 @@ class Display {
             explosion.draw();
             explosion.update();
         });
-          
-        effectWaiting = effectWaiting.filter( explosion => !explosion.isOver() );
+
+        effectWaiting = effectWaiting.filter(explosion => !explosion.isOver());
     }
 
     initMousePointer() {
@@ -201,6 +347,8 @@ class Display {
             ellipse(mouseX, mouseY, 5, 5);
         }
     }
+
+
 
 }
 
@@ -312,18 +460,25 @@ function draw() {
 */
 
 function mouseClicked() {
-    /* test */ isWelcome = true
-    /* test */ welcomeCount = -1
+    // /* test */ isWelcome = true
+    // /* test */ welcomeCount = -1
     if (isWelcome && welcomeCount < 0) {
         if (currentState == WELCOME) {
-            currentState = LOADING;
+            currentState = SPLASH;
         } else if (currentState == LOADING && isFinishLoading) {
             currentState = MAIN_MENU;
-        /*********************test*************************/
-        } else if (currentState == MAIN_MENU) {
-            console.log(effectWaiting)
-            effectWaiting.push(new Explosion(mouseX, mouseY, 0.25));
         }
-        /**************************************************/
+    }
+}
+
+function keyPressed() {
+    if (currentState == MAIN_MENU) {
+        if (keyCode == UP_ARROW) {
+            display.changeMenuPointing(UP_ARROW)
+        } else if (keyCode == DOWN_ARROW) {
+            display.changeMenuPointing(DOWN_ARROW)
+        } else if (keyCode == ENTER) {
+            display.menuSelect()
+        }
     }
 }
