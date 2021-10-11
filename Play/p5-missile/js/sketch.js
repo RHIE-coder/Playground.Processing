@@ -68,7 +68,7 @@ let jsonData = {};
 
 function preload() {
     soundFormats('mp3');
-    introSound = loadSound('assets/sound/funk');    
+    // introSound = loadSound('assets/sound/funk');    
     bombSound = loadSound('assets/sound/collision');    
     successSound = loadSound('assets/sound/good');    
 
@@ -92,7 +92,7 @@ function preload() {
 function setup() {
     createCanvas(800, 400);
     display = new Display();
-    introSound.play();
+    // introSound.play();
 }
 
 function draw() {
@@ -568,7 +568,8 @@ class Display {
             playerStatus.score += 100;
         })
 
-        if (frameCount % (120 - (playerStatus.stage * 10)) == 0) {
+        // if (frameCount % (120 - (playerStatus.stage * 10)) == 0) {
+        if (frameCount % 20 == 0) {
             enemyGroup.add(this.enemyMissileShoot())
         }
     }
@@ -635,10 +636,12 @@ class Display {
             save(json, 'rank.json');
             playerStatus.isVictory = false
         }else{
+            
             if(!isJsonLoaded){
                 loadJSON('rank.json', function(data){
                     jsonData = data
                     isJsonLoaded = true
+                    console.log(jsonData)
                 })
             }
             textSize(32)
